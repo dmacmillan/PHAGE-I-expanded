@@ -12,7 +12,7 @@ def printHtmlHeaders():
     print()
     print("""<!DOCTYPE html><html><head>)
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../cgi-bin/script.js"></script>
+    <script src="../cgi_bin/script.js"></script>
     <link rel="stylesheet" href="../css/style.css"></head><body>""")
 
 def printFileHeaders(filename):
