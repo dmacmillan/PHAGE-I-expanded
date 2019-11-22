@@ -33,7 +33,6 @@ def test_run():
     epitopes_file = os.path.join(os.path.dirname(os.path.dirname(this_file_path)), 'epitopes.txt')
 
     epitopes = Epitope.Epitope.parseEpitopes(epitopes_file)
-    print(epitopes[0])
     for e in epitopes:
         for i,hla in enumerate(e.hlas):
             e.hlas[i] = PHAGE.parseHLA(hla)
@@ -45,7 +44,6 @@ def test_run():
         e.r2 = set(e.r2)
         e.r4 = set(e.r4)
 
-    print('hlas: {}'.format(hlas))
     for hla in hlas:
         hla[0] = PHAGE.parseHLA(hla[0])
     grouped_hlas = PHAGE.groupHLA(hlas)
