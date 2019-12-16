@@ -58,7 +58,8 @@ def translateDNA(sequence, resolvecharacter="X", flag=3):
                 try:
                     unique = set([Codon.codon_dict[potential] for potential in codon])
                 except KeyError:
-                    sys.exit('Could not map one of the codons in: {}'.format(codon))
+                    print('Could not map one of the codons in: {}'.format(codon))
+                    sys.exit(1)
                 # If there is more than resolved one amino acid
                 if (len(unique) > 1):
                     aaseq.append('['+('/').join(unique)+']')
