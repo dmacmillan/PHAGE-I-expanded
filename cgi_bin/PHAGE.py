@@ -1,9 +1,9 @@
-#!/home3/dmacmill/software/anaconda2/bin/python
-import cgi, sys, math
+import cgi
+import sys
+import math
 # from scipy import stats
 from .Codon import *
 from .Epitope import *
-from .variables import *
 import logging
 from itertools import *
 
@@ -55,7 +55,10 @@ def translateDNA(sequence, resolvecharacter="X", flag=3):
                     aaseq.append(unique.pop())
             # If flag is set to 3
             else:
-                unique = set([Codon.codon_dict[potential] for potential in codon])
+                try:
+                    unique = set([Codon.codon_dict[potential] for potential in codon])
+                except KeyError:
+                    sys.exit('Could not map one of the codons in: {}'.format(codon))
                 # If there is more than resolved one amino acid
                 if (len(unique) > 1):
                     aaseq.append('['+('/').join(unique)+']')
@@ -80,7 +83,7 @@ def parseHLA(hla, res=4):
     except (ValueError, IndexError) as e:
         rval = rval[:-1]
     return rval[:res+1]
-    
+
 def parseSeqs(sequences):
     return [translateDNA(x) for x in sequences.splitlines()]
 
@@ -166,15 +169,10 @@ def analyzePatient(patient, patient_id, protein, grouped_hlas, epitopes):
                         continue
                     if patient_aa[0] == '[':
                         patient_aa = tuple(patient_aa[1:-1].split('/'))
-                    #print('{}_{}_{}_{}_{}<br>'.format(hla, state, pos, aa, patient_aa))
                     if (pos, patient_aa) in done:
                         continue
-                    #result_state = determineState(ghlas[compare_hla].keys(), state, patient_aa, aa)
                     result_state = getState(ghlas[compare_hla], pos, patient_aa)
-                    #result_state = getState(ghlas[compare_hla], patient_aa, pos)
-                    #print('{}<br>'.format(result_state))
                     if not result_state:
-                    #    result_state = 'None'
                         continue
                     result = {
                         'pid': patient_id,
@@ -202,22 +200,25 @@ def analyzePatient(patient, patient_id, protein, grouped_hlas, epitopes):
                     done.add((pos, patient_aa))
     return results
 
-def displayResults(results, protein):
-    print('<table id="output_table">'
-    '<th>patient_ID</th>'
-    '<th>HIV_protein</th>'
-    '<th>HLA_allele</th>'
-    '<th>HIV_CODON</th>'
-    '<th>patient_AA</th>'
-    '<th>state</th>'
-    '<th>CTL_epitope</th>'
-    '<th>HLA_restriction</th>'
-    '<th>epitope_coordinates</th>'
-    '<th>epitope_source</th>'
-    '<th>expanded_HLA_definition</th>'
-    '<th>epitope_position</th>')
+def htmlResults(results, protein):
+    html = printHtmlHeaders()
+    html += (
+        '<table id="output_table">'
+        '<th>patient_ID</th>'
+        '<th>HIV_protein</th>'
+        '<th>HLA_allele</th>'
+        '<th>HIV_CODON</th>'
+        '<th>patient_AA</th>'
+        '<th>state</th>'
+        '<th>CTL_epitope</th>'
+        '<th>HLA_restriction</th>'
+        '<th>epitope_coordinates</th>'
+        '<th>epitope_source</th>'
+        '<th>expanded_HLA_definition</th>'
+        '<th>epitope_position</th>'
+    )
     for result in results:
-        print(('<tr>'
+        html += ('<tr>'
               '<td>{}</td>'
               '<td>{}</td>'
               '<td>{}</td>'
@@ -228,10 +229,10 @@ def displayResults(results, protein):
                                    result['hla'],
                                    str(result['pos']),
                                    result['patient_aa'],
-                                   result['state']))
+                                   result['state'])
         first = (',').join(['('+(',').join(x.epitope)+')' for x in result['epitope']])
         if first:
-            print(('<td>{}</td>'
+            html += ('<td>{}</td>'
                   '<td>{}</td>'
                   '<td>{}</td>'
                   '<td>{}</td>'
@@ -241,23 +242,59 @@ def displayResults(results, protein):
                                        (',').join(['({}-{})'.format(x.start, x.end) for x in result['epitope']]),
                                        (',').join(['({})'.format(x.source) for x in result['epitope']]),
                                        'Y' if result['type'] else 'NA',
-                                       '('+(',').join([x.getPos(result['pos'])for x in result['epitope']])+')'))
+                                       '('+(',').join([x.getPos(result['pos'])for x in result['epitope']])+')')
         else:
-            print('<td>NA</td>' * 6)
+            html += ('<td>NA</td>' * 6)
             continue
-        print('</tr>')
-    return None
+        html += ('</tr>')
+    html += '</table></body></html>'
+    return html
 
-def main():
-    epitopes_file = '../epitopes.txt'
-    sys.stderr = open("../error-cgi.log", "a")
+def tsvResults(results, protein, delim='\t'):
+    result = []
+    result.append(delim.join(
+        'patient_ID',
+        'HIV_protein',
+        'HLA_allele',
+        'HIV_CODON',
+        'patient_AA',
+        'state',
+        'CTL_epitope',
+        'HLA_restriction',
+        'epitope_coordinates',
+        'epitope_source',
+        'expanded_HLA_definition',
+        'epitope_position'
+    ))
 
-    form = cgi.FieldStorage()
-    hlas = form.getvalue("hlas_input")
-    patients = form.getvalue("patients_input")
-    protein = form.getvalue("protein_selection")
+    for result in results:
+        result.append(delim.join(
+            result['pid'],
+            protein,
+            result['hla'],
+            str(result['pos']),
+            result['patient_aa'],
+            result['state']
+        )
+        first = delim.join(
+            ['({})'.format(','.join(x.epitope)) for x in result['epitope']]
+        )
+        if first:
+            result.append(delim.join((
+                first,
+                ','.join(['({})'.format(','.join(x.hlas)) for x in result['epitope']]),
+                ','.join(['({}-{})'.format(x.start, x.end) for x in result['epitope']]),
+                ','.join(['({})'.format(x.source) for x in result['epitope']]),
+                'Y' if result['type'] else 'NA',
+                ','.join([x.getPos(result['pos'])for x in result['epitope']])
+            )))
+        else:
+            result.append(delim + delim.join(('NA',)*6))
+            continue
+    return '\n'.join(result)
 
-    printHtmlHeaders()
+def main(hlas, patients, protein, button):
+    epitopes_file = 'epitopes_v1.0.1.txt'
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:
@@ -286,8 +323,5 @@ def main():
 
     results = sorted(results, key = lambda x: (x['pid'], x['pos'], x['hla']))
 
-    #print(set([x.source for y in results for x in y['epitope']]))
-    displayResults(results, protein)
-
-if __name__ == '__main__':
-    main()
+    if button == 'run':
+        return (False, htmlResults(results, protein))
