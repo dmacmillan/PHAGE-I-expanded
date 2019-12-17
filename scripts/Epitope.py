@@ -1,5 +1,10 @@
 class Epitope:
 
+_CURRENT_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    '..'
+)
+
     def __init__(self, epitope=None, protein=None,
     hlas=None, start=None, end=None,
     source=None, r4=None, r2=None, created_at=None, updated_at=None):
@@ -13,10 +18,10 @@ class Epitope:
         self.r2 = r2
         self.created_at = created_at
         self.updated_at = updated_at
-    
+
     def __str__(self):
         return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2), self.created_at, self.updated_at])
-        
+
     def __repr__(self):
         return self
         #return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2)])
@@ -35,7 +40,7 @@ class Epitope:
                 line.r2 = line.r2.split(',')
                 results.append(line)
         return results
-    
+
     def getPos(self, pos):
         if self.start <= pos <= self.end:
             val = str(pos - self.start + 1)
