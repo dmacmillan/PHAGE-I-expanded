@@ -1,6 +1,7 @@
 import cgi
 import sys
 import math
+import os
 # from scipy import stats
 from .Codon import *
 from .Epitope import *
@@ -295,7 +296,8 @@ def tsvResults(results, protein, delim='\t'):
     return '\n'.join(result)
 
 def run(hlas, patients, protein, button):
-    epitopes_file = 'epitopes_v1.0.1.txt'
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    epitopes_file = os.path.join(realpath, '..', 'epitopes_v1.0.1.txt')
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:
