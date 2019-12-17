@@ -1,9 +1,12 @@
-class Epitope:
+import os
 
 _CURRENT_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     '..'
 )
+
+
+class Epitope:
 
     def __init__(self, epitope=None, protein=None,
     hlas=None, start=None, end=None,
@@ -24,7 +27,6 @@ _CURRENT_PATH = os.path.join(
 
     def __repr__(self):
         return self
-        #return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2)])
 
     @staticmethod
     def parseEpitopes(efile, header=True):
