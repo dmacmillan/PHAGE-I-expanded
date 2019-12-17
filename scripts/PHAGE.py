@@ -1,8 +1,7 @@
-import cgi
 import sys
 import math
 import os
-# from scipy import stats
+import datetime
 from .Codon import *
 from .Epitope import *
 import logging
@@ -11,8 +10,7 @@ from itertools import *
 def printHtmlHeaders():
     headers = """<!DOCTYPE html><html><head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../cgi_bin/script.js"></script>
-    <link rel="stylesheet" href="../css/style.css"></head><body>"""
+    </head><body>"""
     return headers
 
 def printFileHeaders(filename):
@@ -292,6 +290,9 @@ def tsvResults(results, protein, delim='\t'):
         tsv.append(temp)
     return '\n'.join(tsv)
 
+def get_current_datetime():
+    return datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+
 def run(hlas, patients, protein, button):
     current_path = os.path.dirname(os.path.realpath(__file__))
     epitopes_file = os.path.join(current_path, '..', 'epitopes_v1.0.1.txt')
@@ -326,4 +327,4 @@ def run(hlas, patients, protein, button):
     if button == 'run':
         return (False, htmlResults(results, protein))
     elif button == 'dl':
-        return (True, tsvResults(results, protein))
+        return (True, tsvResults(results, protein), 'phage_i_expanded_results_{}'.format(get_current_datetime()))
