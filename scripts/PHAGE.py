@@ -9,8 +9,7 @@ import logging
 from itertools import *
 
 def printHtmlHeaders():
-    headers = "Content-Type: text/html\n\n"
-    headers += """<!DOCTYPE html><html><head>
+    headers = """<!DOCTYPE html><html><head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="../cgi_bin/script.js"></script>
     <link rel="stylesheet" href="../css/style.css"></head><body>"""
@@ -268,7 +267,6 @@ def tsvResults(results, protein, delim='\t'):
         'expanded_HLA_definition',
         'epitope_position'
     ))
-
     for result in results:
         result.append(delim.join(
             result['pid'],
@@ -328,3 +326,5 @@ def run(hlas, patients, protein, button):
 
     if button == 'run':
         return (False, htmlResults(results, protein))
+    elif button == 'dl':
+        return (True, tsvResults(results, protein))
