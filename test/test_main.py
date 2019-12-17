@@ -1,7 +1,7 @@
 import os
 import yaml
-from cgi_bin import Epitope
-from cgi_bin import PHAGE
+from scripts import Epitope
+from scripts import PHAGE
 
 this_file_path = os.path.realpath(__file__)
 sample_data_path = os.path.join(os.path.dirname(this_file_path), 'sample_data')

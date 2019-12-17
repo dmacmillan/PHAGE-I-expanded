@@ -295,7 +295,7 @@ def tsvResults(results, protein, delim='\t'):
     return '\n'.join(result)
 
 def run(hlas, patients, protein, button):
-    epitopes_file = 'epitopes_v1.0.1.txt'
+    epitopes_file = '../epitopes_v1.0.1.txt'
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:
