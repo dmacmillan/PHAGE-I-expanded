@@ -297,7 +297,7 @@ def tsvResults(results, protein, delim='\t'):
 
 def run(hlas, patients, protein, button):
     current_path = os.path.dirname(os.path.realpath(__file__))
-    epitopes_file = os.path.join(realpath, '..', 'epitopes_v1.0.1.txt')
+    epitopes_file = os.path.join(current_path, '..', 'epitopes_v1.0.1.txt')
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:
