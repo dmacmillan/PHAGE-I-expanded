@@ -3,6 +3,9 @@ import yaml
 from cgi_bin import Epitope
 from cgi_bin import PHAGE
 
+this_file_path = os.path.realpath(__file__)
+sample_data_path = os.path.join(os.path.dirname(this_file_path), 'sample_data')
+
 def load_hla_data(yaml_file):
     lines = []
     with open(yaml_file) as f:
@@ -17,9 +20,6 @@ def load_patient_yaml(yaml_file):
     with open(yaml_file) as f:
         data = [x.split('\t') for x in yaml.load(f, Loader=yaml.SafeLoader)]
         return data
-
-this_file_path = os.path.realpath(__file__)
-sample_data_path = os.path.join(os.path.dirname(this_file_path), 'sample_data')
 
 def test_run():
     hlas_file = os.path.join(sample_data_path, 'hla_data1.yaml')
@@ -55,5 +55,6 @@ def test_run():
         results += patient_results
 
     results = sorted(results, key = lambda x: (x['pid'], x['pos'], x['hla']))
+    # print(results)
 
-    PHAGE.displayResults(results, protein)
+    print(PHAGE.htmlResults(results, protein))

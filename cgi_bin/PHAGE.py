@@ -8,12 +8,12 @@ import logging
 from itertools import *
 
 def printHtmlHeaders():
-    print("Content-Type: text/html")
-    print()
-    print("""<!DOCTYPE html><html><head>)
+    headers = "Content-Type: text/html\n\n"
+    headers += """<!DOCTYPE html><html><head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="../cgi_bin/script.js"></script>
-    <link rel="stylesheet" href="../css/style.css"></head><body>""")
+    <link rel="stylesheet" href="../css/style.css"></head><body>"""
+    return headers
 
 def printFileHeaders(filename):
     print("Content-Disposition: attachment; filename=\""+filename+"\"")
@@ -276,7 +276,7 @@ def tsvResults(results, protein, delim='\t'):
             str(result['pos']),
             result['patient_aa'],
             result['state']
-        )
+        ))
         first = delim.join(
             ['({})'.format(','.join(x.epitope)) for x in result['epitope']]
         )
