@@ -37,5 +37,5 @@ def results(request):
             response = HttpResponse(output_t[1], content_type="application/octet-stream")
             response['Content-Disposition'] = 'attachment; filename={}'.format(output_t[2])
             return response
-        else:
-            return HttpResponse("Please use the form to submit data.")
+    else:
+        return HttpResponse("Please use the form to submit data.")
