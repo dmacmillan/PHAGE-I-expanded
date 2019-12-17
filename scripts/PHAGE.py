@@ -327,4 +327,4 @@ def run(hlas, patients, protein, button):
     if button == 'run':
         return (False, htmlResults(results, protein))
     elif button == 'dl':
-        return (True, tsvResults(results, protein), 'phage_i_expanded_results_{}'.format(get_current_datetime()))
+        return (True, tsvResults(results, protein), 'phage_i_expanded_results_{}.tsv'.format(get_current_datetime()))

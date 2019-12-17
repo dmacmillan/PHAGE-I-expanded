@@ -7,7 +7,7 @@ def index(request):
     if request.user.is_authenticated:
         context["user_authenticated"]=True
         context["username"]=request.user.username
-    return render(request, "PHAGE_I_expanded_v2/index.html", context)
+    return render(request, "test_PHAGE_I_expanded_v2/index.html", context)
 
 # This function activates the cgi script.
 def results(request):
