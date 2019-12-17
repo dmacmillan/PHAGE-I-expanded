@@ -274,7 +274,7 @@ def tsvResults(results, protein, delim='\t'):
             result['patient_aa'],
             result['state']
         ]
-        first = ['({})'.format(','.join(x.epitope)) for x in result['epitope']]
+        first = '({})'.format(','.join([x.epitope for x in result['epitope']]))
         if first:
             temp.extend([
                 first,
