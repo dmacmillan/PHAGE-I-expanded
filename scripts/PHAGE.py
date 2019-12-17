@@ -252,8 +252,8 @@ def htmlResults(results, protein):
     return html
 
 def tsvResults(results, protein, delim='\t'):
-    result = []
-    result.append(delim.join(
+    tsv = []
+    tsv.append(delim.join((
         'patient_ID',
         'HIV_protein',
         'HLA_allele',
@@ -266,32 +266,31 @@ def tsvResults(results, protein, delim='\t'):
         'epitope_source',
         'expanded_HLA_definition',
         'epitope_position'
-    ))
+    )))
     for result in results:
-        result.append(delim.join(
+        temp = [
             result['pid'],
             protein,
             result['hla'],
             str(result['pos']),
             result['patient_aa'],
             result['state']
-        ))
-        first = delim.join(
-            ['({})'.format(','.join(x.epitope)) for x in result['epitope']]
-        )
+        ]
+        first = ['({})'.format(','.join(x.epitope)) for x in result['epitope']]
         if first:
-            result.append(delim.join((
+            temp.extend([
                 first,
                 ','.join(['({})'.format(','.join(x.hlas)) for x in result['epitope']]),
                 ','.join(['({}-{})'.format(x.start, x.end) for x in result['epitope']]),
                 ','.join(['({})'.format(x.source) for x in result['epitope']]),
                 'Y' if result['type'] else 'NA',
                 ','.join([x.getPos(result['pos'])for x in result['epitope']])
-            )))
+            ])
         else:
-            result.append(delim + delim.join(('NA',)*6))
-            continue
-    return '\n'.join(result)
+            temp.extend(('NA',)*6)
+        temp = delim.join(temp)
+        tsv.append(temp)
+    return '\n'.join(tsv)
 
 def run(hlas, patients, protein, button):
     current_path = os.path.dirname(os.path.realpath(__file__))
