@@ -274,10 +274,7 @@ def tsvResults(results, protein, delim='\t'):
             result['patient_aa'],
             result['state']
         ]
-        try:
-            first = '({})'.format(','.join([x.epitope for x in result['epitope']]))
-        except TypeError:
-            raise TypeError('first:\n{}\n'.format(first))
+        first = ','.join(['({})'.format(','.join(x.epitope)) for x in result['epitope']])
         if first:
             temp.extend([
                 first,
