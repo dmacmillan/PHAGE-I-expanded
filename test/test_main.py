@@ -30,7 +30,7 @@ def test_run():
 
     protein = 'Gag'
 
-    epitopes_file = os.path.join(os.path.dirname(os.path.dirname(this_file_path)), 'epitopes_v1.0.1.txt')
+    epitopes_file = os.path.join(os.path.dirname(os.path.dirname(this_file_path)), 'epitopes_v1.0.2.txt')
 
     epitopes = Epitope.Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:
