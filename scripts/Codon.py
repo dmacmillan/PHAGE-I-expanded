@@ -1,5 +1,7 @@
 class Codon:
 
+    nucleotides = set(('A', 'C', 'T', 'G'))
+
     codon_dict={'TTT':'F','TTC':'F','TTA':'L','TTG':'L',
                 'TCT':'S','TCC':'S','TCA':'S','TCG':'S',
                 'TAT':'Y','TAC':'Y','TAA':'*','TAG':'*',
@@ -17,31 +19,31 @@ class Codon:
                 'GAT':'D','GAC':'D','GAA':'E','GAG':'E',
                 'GGT':'G','GGC':'G','GGA':'G','GGG':'G',
                 '---':'-','XXX':'-','???':'?'}
-                
+
     mixture_dict={'W':'AT','R':'AG','K':'GT','Y':'CT',
                   'S':'CG','M':'AC','V':'AGC','H':'ATC',
                   'D':'ATG','B':'TGC','N':'ATGC','-':'-'}
-    
-    
+
+
     def __init__(self, codon_string):
         self.codon = codon_string
-    
+
     @classmethod
     def resolveCodon(cls, codon):
         nonmix = []
         if (codon in cls.codon_dict):
-            return[codon]
+            return [codon]
         elif ((codon.count('-') + codon.count('X')) == 3):
             return ['---']
         elif (1 <= codon.count('-') <= 2) or (1 <= codon.count('X') <= 2):
-            return['???']
+            return ['???']
         for base in codon:
             #Check for mixtures
             if (base in cls.mixture_dict):
                 if (not nonmix):
                     nonmix = [x for x in cls.mixture_dict[base]]
                 else:
-                    nonmix=[x +y for x in nonmix for y in cls.mixture_dict[base]]
+                    nonmix=[(x + y) for x in nonmix for y in cls.mixture_dict[base]]
             else:
                 if (not nonmix):
                     nonmix.append(base)

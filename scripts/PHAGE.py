@@ -57,6 +57,7 @@ def translateDNA(sequence, resolvecharacter="X", flag=3):
                     unique = set([Codon.codon_dict[potential] for potential in codon])
                 except KeyError:
                     print('Could not map one of the codons in: {}'.format(codon))
+                    print('Sequence was: {}'.format(sequence[i:i+3]))
                     sys.exit(1)
                 # If there is more than resolved one amino acid
                 if (len(unique) > 1):
@@ -127,7 +128,6 @@ def parseEpitopes(epitopes_file):
     return results
 
 def getState(hla, pos, patient_aa):
-    print('hla: {}'.format(hla))
     na = ('nonadapted') in hla and (pos in hla['nonadapted'])
     a = ('adapted') in hla and (pos in hla['adapted'])
     if na and a:
@@ -327,4 +327,4 @@ def run(hlas, patients, protein, button):
     if button == 'run':
         return (False, htmlResults(results, protein))
     elif button == 'dl':
-        return (True, tsvResults(results, protein), 'phage_i_expanded_results_{}.tsv'.format(get_current_datetime()))
+        return (True, tsvResults(results, protein), 'phage_i_expanded_results_{}_{}.tsv'.format(protein.lower(), get_current_datetime()))
