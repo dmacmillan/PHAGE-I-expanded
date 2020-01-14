@@ -7,6 +7,21 @@ from .Epitope import *
 import logging
 from itertools import *
 
+output_cols = (
+    'patient_id',
+    'hiv_protein',
+    'hla_allele',
+    'hiv_codon',
+    'patient_aa',
+    'state',
+    'ctl_epitope',
+    'hla_restriction',
+    'epitope_coordinates',
+    'epitope_source',
+    'expanded_hla_definition',
+    'epitope_position'
+)
+
 def printHtmlHeaders():
     headers = """<!DOCTYPE html><html><head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -202,21 +217,8 @@ def analyzePatient(patient, patient_id, protein, grouped_hlas, epitopes):
 
 def htmlResults(results, protein):
     html = printHtmlHeaders()
-    html += (
-        '<table id="output_table">'
-        '<th>patient_ID</th>'
-        '<th>HIV_protein</th>'
-        '<th>HLA_allele</th>'
-        '<th>HIV_CODON</th>'
-        '<th>patient_AA</th>'
-        '<th>state</th>'
-        '<th>CTL_epitope</th>'
-        '<th>HLA_restriction</th>'
-        '<th>epitope_coordinates</th>'
-        '<th>epitope_source</th>'
-        '<th>expanded_HLA_definition</th>'
-        '<th>epitope_position</th>'
-    )
+    html += '<table id="output_table">'
+    html += '<th>{}</th>'.format('</th><th>'.join(output_cols))
     for result in results:
         html += ('<tr>'
               '<td>{}</td>'
@@ -252,20 +254,7 @@ def htmlResults(results, protein):
 
 def tsvResults(results, protein, delim='\t'):
     tsv = []
-    tsv.append(delim.join((
-        'patient_ID',
-        'HIV_protein',
-        'HLA_allele',
-        'HIV_CODON',
-        'patient_AA',
-        'state',
-        'CTL_epitope',
-        'HLA_restriction',
-        'epitope_coordinates',
-        'epitope_source',
-        'expanded_HLA_definition',
-        'epitope_position'
-    )))
+    tsv.append(delim.join(output_cols))
     for result in results:
         temp = [
             result['pid'],
