@@ -1,6 +1,7 @@
 # PHAGE-I-expanded (Proportion of HLA Associated Genomic Escape)
 
 ## Purpose
+To identify sites in HIV that are associated with one or more HLA alleles expressed by the individual, and to infer HLA-adaptation state of these sites
 
 ## Input
 * A list HLA-associated polymorphisms
