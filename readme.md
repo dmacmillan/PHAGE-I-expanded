@@ -4,9 +4,15 @@
 To identify sites in HIV that are associated with one or more HLA alleles expressed by the individual, and to infer HLA-adaptation state of these sites
 
 ## Input
-* A list HLA-associated polymorphisms
-* A list of patients, their HLA types, and HIV sequences for a given protein
-* An HIV protein (selected from a list)
+* A tab-separated list of HLA-associated polymorphisms
+  * `hla_allele` - The HLA allele, e.g. "A*01:01" ("\*" and ":" are not necessary)
+  * `position_and_aa` - The position of the HIV codon followed by the amino acid at that position, e.g. "206R"
+  * `adaptation_state` - Must be either "adapted" or "nonadapted", defines what it means to have this particular amino acid at this location for this HLA
+* A tab-separated list of patients, their HLA types, and HIV sequences for a given protein
+  * `patient_id` - A unique identifier for the patient or sequence
+  * `hla_allele` (1-6) - The next 1-6 columns should contain HLA alleles expressed by the patient or sequence, same format as in the other hla_allele
+  * `sequence` - An HIV nucelotide sequence for the given protein
+* An HIV `protein` (selected in the interface)
 
 ## Output
 Tab-separated values with the following fields/columns:
