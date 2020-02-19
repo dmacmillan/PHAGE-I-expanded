@@ -285,7 +285,7 @@ def get_current_datetime():
 
 def run(hlas, patients, protein, button):
     current_path = os.path.dirname(os.path.realpath(__file__))
-    epitopes_file = os.path.join(current_path, '..', 'epitopes_v1.0.2.txt')
+    epitopes_file = os.path.join(current_path, '..', 'epitopes_v1.0.3.txt')
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
     for e in epitopes:

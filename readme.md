@@ -22,7 +22,7 @@ Tab-separated values with the following fields/columns:
 * `HIV_CODON` - The HIV codon position associated with the HLA in question (HXB2 coordinates)
 * `patient_AA` - The amino acid of the patient at this codon
 * `state` - Defines whether the patient's sequence is adapted, non-adapted, possible-adapted, or possible-nonadapted
-* `CTL_epitope` - The actual epitope amino acid sequence if the HLA-associated site in question is within 3 amino acids of an optimal CTL epitope (most of these come from LANL)
+* `CTL_epitope` - The actual epitope amino acid sequence if the HLA-associated site in question is within 3 amino acids of an optimal CTL epitope (most of these come from LANL) (**NOTE: epitope coordinates are amino acid coordinates and are 1-based**)
 * `HLA_restriction` - The HLA restriction defined for that epitope, sometimes this matches exactly to the HLA of the patient, and sometimes the epitope was only defined at the two digit resolution level. Other times the epitope is restricted by a closely related HLA allele to the one the patient expresses
 * `epitope_coordinates` - The amino acid coordinates of the epitope
 * `epitope_source` - Where the epitope was originally defined
