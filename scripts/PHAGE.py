@@ -88,7 +88,7 @@ def parse(input):
 
 def parseHLA(hla, res=4):
     rval = hla.strip()
-    chars = ['*', ':']
+    chars = ['*', ':', '(', ')']
     for char in chars:
         if char in rval:
             rval = rval.replace(char, '')
@@ -159,7 +159,6 @@ def getState(hla, pos, patient_aa):
             return 'possible_adapted'
     else:
         if any(x in hla['adapted'][pos] for x in patient_aa):
-            print('DOES IT EVER MAKE IT HERE?')
             return 'adapted'
         else:
             return 'possible_nonadapted'

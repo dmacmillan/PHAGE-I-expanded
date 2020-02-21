@@ -20,7 +20,7 @@ class Epitope:
         return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2), self.created_at, self.updated_at])
 
     def __repr__(self):
-        return self
+        return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2), self.created_at, self.updated_at])
 
     @staticmethod
     def parseEpitopes(efile, header=True):
