@@ -27,6 +27,7 @@ class Codon:
 
     def __init__(self, codon_string):
         self.codon = codon_string
+        self.contains_mixtures = False
 
     @classmethod
     def resolveCodon(cls, codon):
