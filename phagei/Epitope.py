@@ -1,10 +1,15 @@
-
-
 class Epitope:
-
-    def __init__(self, epitope=None, protein=None,
-    hlas=None, start=None, end=None,
-    source=None, r4=None, r2=None, created_at=None, updated_at=None):
+    def __init__(self,
+                 epitope=None,
+                 protein=None,
+                 hlas=None,
+                 start=None,
+                 end=None,
+                 source=None,
+                 r4=None,
+                 r2=None,
+                 created_at=None,
+                 updated_at=None):
         self.epitope = epitope
         self.protein = protein
         self.hlas = hlas
@@ -17,10 +22,20 @@ class Epitope:
         self.updated_at = updated_at
 
     def __str__(self):
-        return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2), self.created_at, self.updated_at])
+        return ('\t').join([(',').join(self.epitope), self.protein,
+                            (',').join(self.hlas),
+                            str(self.start),
+                            str(self.end), self.source, (',').join(self.r4),
+                            (',').join(self.r2), self.created_at,
+                            self.updated_at])
 
     def __repr__(self):
-        return ('\t').join([(',').join(self.epitope), self.protein, (',').join(self.hlas), str(self.start), str(self.end), self.source, (',').join(self.r4), (',').join(self.r2), self.created_at, self.updated_at])
+        return ('\t').join([(',').join(self.epitope), self.protein,
+                            (',').join(self.hlas),
+                            str(self.start),
+                            str(self.end), self.source, (',').join(self.r4),
+                            (',').join(self.r2), self.created_at,
+                            self.updated_at])
 
     @staticmethod
     def parseEpitopes(efile, header=True):
