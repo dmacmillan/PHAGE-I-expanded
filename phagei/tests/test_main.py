@@ -1,5 +1,8 @@
 import os
 import yaml
+import pytest
+from tempfile import TemporaryFile
+from pathlib import Path
 from phagei.Epitope import Epitope
 import phagei.main as main
 
@@ -24,82 +27,109 @@ def load_patient_yaml(yaml_file):
         return data
 
 
-def test_run():
-    hlas_file = os.path.join(sample_data_path, 'hla_data1.yaml')
-    patients_file = os.path.join(sample_data_path, 'patient_data1.yaml')
+@pytest.fixture
+def setup():
+    cwd = Path(os.path.realpath(__file__)).parent
+    sample_data_path = cwd / 'sample_data'
+    hlas_file = sample_data_path / 'hla_data1.yaml'
+    patients_file = sample_data_path / 'patient_data1.yaml'
 
-    patients = main.getPatients(load_patient_yaml(patients_file), simple=1)
     hlas = load_hla_data(hlas_file)
-
+    patients = main.getPatients(load_patient_yaml(patients_file), simple=1)
     protein = 'Gag'
 
-    epitopes_file = os.path.join(
-        os.path.dirname(os.path.dirname(this_file_path)),
-        'epitopes_v1.0.3.txt')
+    hlas_tempfile = './tmp_hlas'
+    with open(hlas_tempfile, 'w') as o:
+        o.write('\n'.join(['\t'.join(x) for x in hlas]))
+    patients_tempfile = './tmp_patients'
+    with open(patients_tempfile, 'w') as o:
+        o.write('\n'.join(['\t'.join(x) for x in patients]))
 
-    epitopes = Epitope.parseEpitopes(epitopes_file)
-    for e in epitopes:
-        for i, hla in enumerate(e.hlas):
-            e.hlas[i] = main.parseHLA(hla)
-        for i, hla in enumerate(e.r2):
-            e.r2[i] = main.parseHLA(hla)
-        for i, hla in enumerate(e.r4):
-            e.r4[i] = main.parseHLA(hla)
-        e.hlas = set(e.hlas)
-        e.r2 = set(e.r2)
-        e.r4 = set(e.r4)
-
-    for hla in hlas:
-        hla[0] = main.parseHLA(hla[0])
-    grouped_hlas = main.groupHLA(hlas)
-
-    results = []
-    done = set()
-    for patient in patients:
-        patient_results = main.analyzePatient(patients[patient], patient,
-                                              protein, grouped_hlas, epitopes)
-        results += patient_results
-
-    results = sorted(results, key=lambda x: (x['pid'], x['pos'], x['hla']))
-    # print(results)
-
-    print(main.tsvResults(results, protein))
+    return {'cwd': cwd, 'patients': patients_tempfile, 'hlas': hlas_tempfile}
 
 
-def test_gp41():
-    hlas_file = os.path.join(sample_data_path, 'hla_data_gp41.yaml')
-    patients_file = os.path.join(sample_data_path, 'patient_data_gp41.yaml')
+def test1(setup):
+    tsv_results = main.run(setup['hlas'], setup['patients'], 'Gag')
+    print(tsv_results)
+    os.remove(setup['hlas'])
+    os.remove(setup['patients'])
 
-    patients = main.getPatients(load_patient_yaml(patients_file), simple=1)
-    hlas = load_hla_data(hlas_file)
 
-    protein = 'gp41'
+# def test_run():
+#     hlas_file = os.path.join(sample_data_path, 'hla_data1.yaml')
+#     patients_file = os.path.join(sample_data_path, 'patient_data1.yaml')
 
-    epitopes_file = os.path.join(
-        os.path.dirname(os.path.dirname(this_file_path)),
-        'epitopes_v1.0.3.txt')
+#     patients = main.getPatients(load_patient_yaml(patients_file), simple=1)
+#     hlas = load_hla_data(hlas_file)
 
-    epitopes = Epitope.parseEpitopes(epitopes_file)
-    for e in epitopes:
-        for i, hla in enumerate(e.hlas):
-            e.hlas[i] = main.parseHLA(hla)
-        for i, hla in enumerate(e.r2):
-            e.r2[i] = main.parseHLA(hla)
-        for i, hla in enumerate(e.r4):
-            e.r4[i] = main.parseHLA(hla)
-        e.hlas = set(e.hlas)
-        e.r2 = set(e.r2)
-        e.r4 = set(e.r4)
+#     protein = 'Gag'
 
-    for hla in hlas:
-        hla[0] = main.parseHLA(hla[0])
-    grouped_hlas = main.groupHLA(hlas)
+#     epitopes_file = os.path.join(
+#         os.path.dirname(os.path.dirname(this_file_path)),
+#         'epitopes_v1.0.3.txt')
 
-    results = []
-    done = set()
-    for patient in patients:
-        patient_results = main.analyzePatient(patients[patient], patient,
-                                              protein, grouped_hlas, epitopes)
-        results += patient_results
+#     epitopes = Epitope.parseEpitopes(epitopes_file)
+#     for e in epitopes:
+#         for i, hla in enumerate(e.hlas):
+#             e.hlas[i] = main.parseHLA(hla)
+#         for i, hla in enumerate(e.r2):
+#             e.r2[i] = main.parseHLA(hla)
+#         for i, hla in enumerate(e.r4):
+#             e.r4[i] = main.parseHLA(hla)
+#         e.hlas = set(e.hlas)
+#         e.r2 = set(e.r2)
+#         e.r4 = set(e.r4)
 
-    print(main.tsvResults(results, protein))
+#     for hla in hlas:
+#         hla[0] = main.parseHLA(hla[0])
+#     grouped_hlas = main.groupHLA(hlas)
+
+#     results = []
+#     done = set()
+#     for patient in patients:
+#         patient_results = main.analyzePatient(patients[patient], patient,
+#                                               protein, grouped_hlas, epitopes)
+#         results += patient_results
+
+#     results = sorted(results, key=lambda x: (x['pid'], x['pos'], x['hla']))
+#     # print(results)
+
+#     print(main.tsvResults(results, protein))
+
+# def test_gp41():
+#     hlas_file = os.path.join(sample_data_path, 'hla_data_gp41.yaml')
+#     patients_file = os.path.join(sample_data_path, 'patient_data_gp41.yaml')
+
+#     patients = main.getPatients(load_patient_yaml(patients_file), simple=1)
+#     hlas = load_hla_data(hlas_file)
+
+#     protein = 'gp41'
+
+#     epitopes_file = os.path.join(
+#         os.path.dirname(os.path.dirname(this_file_path)),
+#         'epitopes_v1.0.3.txt')
+
+#     epitopes = Epitope.parseEpitopes(epitopes_file)
+#     for e in epitopes:
+#         for i, hla in enumerate(e.hlas):
+#             e.hlas[i] = main.parseHLA(hla)
+#         for i, hla in enumerate(e.r2):
+#             e.r2[i] = main.parseHLA(hla)
+#         for i, hla in enumerate(e.r4):
+#             e.r4[i] = main.parseHLA(hla)
+#         e.hlas = set(e.hlas)
+#         e.r2 = set(e.r2)
+#         e.r4 = set(e.r4)
+
+#     for hla in hlas:
+#         hla[0] = main.parseHLA(hla[0])
+#     grouped_hlas = main.groupHLA(hlas)
+
+#     results = []
+#     done = set()
+#     for patient in patients:
+#         patient_results = main.analyzePatient(patients[patient], patient,
+#                                               protein, grouped_hlas, epitopes)
+#         results += patient_results
+
+#     print(main.tsvResults(results, protein))

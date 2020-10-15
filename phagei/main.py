@@ -3,6 +3,7 @@ import sys
 import datetime
 import os
 import argparse
+import logging
 from pathlib import Path
 from phagei.Codon import Codon
 from phagei.Epitope import Epitope
