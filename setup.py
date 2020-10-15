@@ -7,4 +7,5 @@ setup(name='phagei',
       packages=find_packages(),
       install_requires=['pytest', 'pyyaml'],
       python_requires='>=3.6',
+      package_data={'phagei': ['epitopes_v1.0.3.txt']},
       entry_points={'console_scripts': ['phagei = phagei.main:main']})

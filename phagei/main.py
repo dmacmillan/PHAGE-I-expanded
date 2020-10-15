@@ -251,6 +251,7 @@ def get_current_datetime():
 
 def run(hlas, patients, protein):
     current_path = Path(os.path.realpath(__file__)).resolve().parent
+    print('current_path', current_path)
     epitopes_file = current_path / 'epitopes_v1.0.3.txt'
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
@@ -271,7 +272,8 @@ def run(hlas, patients, protein):
         hla[0] = parseHLA(hla[0])
     grouped_hlas = groupHLA(hlas)
 
-    patients = getPatients(parse(patients), 1)
+    with open(patients) as f:
+        patients = getPatients(parse(f.read()), 1)
 
     results = []
     for patient in patients:
