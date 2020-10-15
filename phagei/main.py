@@ -252,7 +252,6 @@ def get_current_datetime():
 
 def run(hlas, patients, protein):
     current_path = Path(os.path.realpath(__file__)).resolve().parent
-    print('current_path', current_path)
     epitopes_file = current_path / 'epitopes_v1.0.3.txt'
 
     epitopes = Epitope.parseEpitopes(epitopes_file)
@@ -289,7 +288,8 @@ def run(hlas, patients, protein):
 
 def default_output_path(protein):
     return Path(os.getcwd()).resolve(
-    ) / f'phagei_i_expanded_results_{protein.lower()}_{get_current_datetime()}.tsv'
+    ) / f'phagei_i_expanded_results_{protein.lower()}_{get_current_datetime()}.tsv'.replace(
+        ':', '')
 
 
 def main():
